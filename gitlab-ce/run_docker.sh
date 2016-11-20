@@ -1,13 +1,14 @@
 #!/bin/bash
 
-PATH_TO_VOLUME_FOLDER="$DOCKER_VOLUMES_STORAGE_PATH_PREFIX/gitlab-ce"
+docker volume create --name gitlab-ce-config-volume
+docker volume create --name gitlab-ce-logs-volume
+docker volume create --name gitlab-ce-data-volume
 
 sudo docker run --detach \
     --publish 443:443 --publish 81:80 --publish 23:22 \
     --name gitlab-ce \
     --restart always \
-    --volume "$PATH_TO_VOLUME_FOLDER/config":"/etc/gitlab" \
-    --volume "$PATH_TO_VOLUME_FOLDER/logs":"/var/log/gitlab" \
-    --volume "$PATH_TO_VOLUME_FOLDER/data":"/var/opt/gitlab" \
+    --volume gitlab-ce-config-volume:"/etc/gitlab" \
+    --volume gitlab-ce-logs-volume:"/var/log/gitlab" \
+    --volume gitlab-ce-data-volume:"/var/opt/gitlab" \
     "gitlab/gitlab-ce:latest"
-
